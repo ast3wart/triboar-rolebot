@@ -12,6 +12,9 @@ export const config = {
     apiUrl: process.env.BACKEND_API_URL || 'http://localhost:3000',
     apiToken: process.env.BACKEND_API_TOKEN,
   },
+  checkout: {
+    url: process.env.CHECKOUT_URL || 'https://triboar.guild/checkout/',
+  },
   gracePeriod: {
     days: parseInt(process.env.GRACE_PERIOD_DAYS) || 7,
     dmEnabled: process.env.GRACE_PERIOD_DM_ENABLED !== 'false',

@@ -1,8 +1,10 @@
 import logger from '../logger.js';
+import { config } from '../config.js';
 
 export class DMService {
   constructor(client) {
     this.client = client;
+    this.checkoutUrl = config.checkout.url;
   }
 
   /**
@@ -45,7 +47,7 @@ export class DMService {
             type: 2,
             style: 5,
             label: 'Renew Membership',
-            url: 'https://triboar.guild/checkout/', // Update with your actual checkout URL
+            url: this.checkoutUrl,
           },
         ],
       };
@@ -105,7 +107,7 @@ export class DMService {
             type: 2,
             style: 5,
             label: 'Renew Membership',
-            url: 'https://triboar.guild/checkout/',
+            url: this.checkoutUrl,
           },
         ],
       };
