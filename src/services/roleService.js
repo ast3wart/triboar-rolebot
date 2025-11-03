@@ -32,6 +32,15 @@ export class RoleService {
       return true;
 
     } catch (err) {
+      // Handle specific cases where user is no longer accessible
+      if (err.code === 10007 || err.message?.includes('Unknown Member')) {
+        logger.warn({ discordId }, 'User not found or has left the server');
+        return false;
+      }
+      if (err.code === 50007 || err.message?.includes('Cannot send messages')) {
+        logger.warn({ discordId }, 'User has blocked the bot or DMs are disabled');
+        return false;
+      }
       logger.error({ err, discordId }, 'Failed to add subscribed role');
       return false;
     }
@@ -55,6 +64,11 @@ export class RoleService {
       return true;
 
     } catch (err) {
+      // Handle specific cases where user is no longer accessible
+      if (err.code === 10007 || err.message?.includes('Unknown Member')) {
+        logger.warn({ discordId }, 'User not found or has left the server - skipping role removal');
+        return true; // Don't fail, user is already gone
+      }
       logger.error({ err, discordId }, 'Failed to remove subscribed role');
       return false;
     }
@@ -69,6 +83,11 @@ export class RoleService {
       const member = await guild.members.fetch(discordId);
       return member.roles.cache.has(this.subscribedRoleId);
     } catch (err) {
+      // User not found or no longer in server - treat as not having the role
+      if (err.code === 10007 || err.message?.includes('Unknown Member')) {
+        logger.debug({ discordId }, 'User not found when checking subscribed role');
+        return false;
+      }
       logger.error({ err, discordId }, 'Failed to check subscribed role');
       return false;
     }

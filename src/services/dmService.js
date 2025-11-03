@@ -59,6 +59,15 @@ export class DMService {
       return true;
 
     } catch (err) {
+      // Handle specific cases where user is no longer accessible
+      if (err.code === 10007 || err.message?.includes('Unknown User')) {
+        logger.warn({ discordId }, 'User not found - cannot send grace period reminder');
+        return false;
+      }
+      if (err.code === 50007 || err.message?.includes('Cannot send messages')) {
+        logger.warn({ discordId }, 'User has blocked the bot or DMs are disabled');
+        return false;
+      }
       logger.error({ err, discordId }, 'Failed to send grace period reminder');
       return false;
     }
@@ -110,6 +119,15 @@ export class DMService {
       return true;
 
     } catch (err) {
+      // Handle specific cases where user is no longer accessible
+      if (err.code === 10007 || err.message?.includes('Unknown User')) {
+        logger.warn({ discordId }, 'User not found - cannot send expiration notification');
+        return false;
+      }
+      if (err.code === 50007 || err.message?.includes('Cannot send messages')) {
+        logger.warn({ discordId }, 'User has blocked the bot or DMs are disabled');
+        return false;
+      }
       logger.error({ err, discordId }, 'Failed to send subscription expired notification');
       return false;
     }
@@ -151,6 +169,15 @@ export class DMService {
       return true;
 
     } catch (err) {
+      // Handle specific cases where user is no longer accessible
+      if (err.code === 10007 || err.message?.includes('Unknown User')) {
+        logger.warn({ discordId }, 'User not found - cannot send confirmation DM');
+        return false;
+      }
+      if (err.code === 50007 || err.message?.includes('Cannot send messages')) {
+        logger.warn({ discordId }, 'User has blocked the bot or DMs are disabled');
+        return false;
+      }
       logger.error({ err, discordId }, 'Failed to send subscription confirmation');
       return false;
     }
