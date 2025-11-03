@@ -98,16 +98,29 @@ export class BackendService {
 
   /**
    * Update DM preference for grace period user
+   * @param {string} discordId - Discord user ID
+   * @param {boolean} enabled - Whether to enable grace period DMs
    */
-  async setGracePeriodDMPreference(userId, enabled) {
+  async setGracePeriodDMPreference(discordId, enabled) {
     try {
-      await this.client.put(`/api/admin/users/${userId}/grace-dm-preference`, {
+      // Look up user by discordId to get database userId
+      const response = await this.client.get('/api/admin/users/search', {
+        params: { discord_id: discordId, limit: 1 },
+      });
+
+      const user = response.data.users?.[0];
+      if (!user) {
+        logger.warn({ discordId }, 'User not found when updating DM preference');
+        return false;
+      }
+
+      await this.client.put(`/api/admin/users/${user.id}/grace-dm-preference`, {
         dmEnabled: enabled,
       });
-      logger.info({ userId, enabled }, 'Updated grace period DM preference');
+      logger.info({ discordId, userId: user.id, enabled }, 'Updated grace period DM preference');
       return true;
     } catch (err) {
-      logger.error({ err, userId }, 'Failed to update DM preference');
+      logger.error({ err, discordId }, 'Failed to update DM preference');
       return false;
     }
   }
