@@ -241,12 +241,6 @@ The project uses a **single Dockerfile** with multiple build targets:
 - **`production`** target - Optimized with production-only dependencies
 - **`production-deps`** target - Intermediate stage for efficient layer caching
 
-This approach:
-- ✅ Simplifies maintenance (one Dockerfile instead of two)
-- ✅ Ensures dev/prod parity
-- ✅ Optimizes production images (smaller, faster)
-- ✅ Works seamlessly with docker-compose and platforms like fly.io
-
 ### Production Deployment with Docker
 
 The production target creates an optimized image with only production dependencies.
@@ -470,16 +464,6 @@ https://your-app-name.fly.dev/webhooks/rolebot
 ```
 
 Make sure to include the `Authorization: Bearer <BACKEND_API_TOKEN>` header.
-
-#### fly.io Benefits
-
-- ✅ Automatic HTTPS
-- ✅ Global CDN and edge network
-- ✅ Built-in health checks
-- ✅ Zero-downtime deployments
-- ✅ Automatic restarts on crashes
-- ✅ Easy secrets management
-- ✅ Free tier available (perfect for Discord bots)
 
 ## Architecture
 
