@@ -10,7 +10,43 @@ A Discord bot that automates subscription-based access control for the Triboar G
 - **Webhook Integration** - Real-time updates from backend payment system
 - **Daily Synchronization** - Automated daily sync at 11:59 PM to ensure accuracy
 - **DM Preferences** - Users can opt-in/opt-out of notifications by replying "START" or "STOP"
+- **Slash Commands** - Staff commands for character approval and player onboarding
 - **Production Ready** - Docker support, health checks, structured logging, and authentication
+
+## Slash Commands
+
+### `/approve-character`
+
+Staff-only command to approve new players and onboard them to the Triboar Guildhall.
+
+**Required Permissions:**
+- User must have the Staff role (configured via `DISCORD_STAFF_ROLE_ID`)
+- Bot must have "Manage Roles" permission in Discord
+
+**Parameters:**
+- `user` - The Discord user to approve (required)
+
+**What it does:**
+1. Adds the `@Player` role to the user (configured via `DISCORD_PLAYER_ROLE_ID`)
+2. Removes the `@Roll Dice` role if present (configured via `DISCORD_ROLL_DICE_ROLE_ID`)
+3. Posts a welcome message in the channel where the command was run
+4. Sends confirmation to the staff member who ran the command
+
+**Usage:**
+```
+/approve-character user:@JohnDoe
+```
+
+**Configuration:**
+To use this command, set these environment variables in your `.env` file:
+```env
+DISCORD_CLIENT_ID=your_discord_application_id_here
+DISCORD_PLAYER_ROLE_ID=your_player_role_id_here
+DISCORD_ROLL_DICE_ROLE_ID=your_roll_dice_role_id_here
+DISCORD_STAFF_ROLE_ID=your_staff_role_id_here
+```
+
+**Note:** The `DISCORD_CLIENT_ID` is your Discord Application ID (found in the Discord Developer Portal under "General Information"), not your bot token.
 
 ## Quick Start
 
@@ -90,6 +126,10 @@ That's it! Docker will handle installing dependencies and running the bot. No ne
 
 | Variable | Description | Default |
 |----------|-------------|---------|
+| `DISCORD_CLIENT_ID` | Discord Application ID (required for slash commands) | - |
+| `DISCORD_PLAYER_ROLE_ID` | Role ID for approved players (required for /approve-character) | - |
+| `DISCORD_ROLL_DICE_ROLE_ID` | Role ID to remove on approval (required for /approve-character) | - |
+| `DISCORD_STAFF_ROLE_ID` | Role ID for staff members (required for /approve-character) | - |
 | `BACKEND_API_URL` | Base URL for backend API | `http://localhost:3000` |
 | `CHECKOUT_URL` | Subscription checkout page URL | `https://triboar.guild/checkout/` |
 | `GRACE_PERIOD_DAYS` | Number of days for grace period | `7` |
@@ -218,6 +258,10 @@ triboar-rolebot/
 │   ├── logger.js              # Pino logging configuration
 │   ├── middleware.js          # Express middleware (webhook auth)
 │   ├── webhookServer.js       # Express webhook server
+│   ├── commands/
+│   │   └── approve-character.js  # Slash command for character approval
+│   ├── utils/
+│   │   └── commandHandler.js     # Slash command registration and handling
 │   └── services/
 │       ├── backendService.js  # Backend API communication
 │       ├── dmService.js       # Direct message notifications

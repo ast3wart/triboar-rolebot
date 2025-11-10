@@ -7,6 +7,9 @@ export const config = {
     token: process.env.DISCORD_BOT_TOKEN,
     guildId: process.env.DISCORD_GUILD_ID,
     subscribedRoleId: process.env.DISCORD_SUBSCRIBED_ROLE_ID,
+    playerRoleId: process.env.DISCORD_PLAYER_ROLE_ID,
+    rollDiceRoleId: process.env.DISCORD_ROLL_DICE_ROLE_ID,
+    staffRoleId: process.env.DISCORD_STAFF_ROLE_ID,
   },
   backend: {
     apiUrl: process.env.BACKEND_API_URL || 'http://localhost:3000',
@@ -27,6 +30,14 @@ export const config = {
 // Validate required config
 const requiredEnvVars = ['DISCORD_BOT_TOKEN', 'DISCORD_GUILD_ID', 'DISCORD_SUBSCRIBED_ROLE_ID', 'BACKEND_API_TOKEN'];
 const missing = requiredEnvVars.filter(v => !process.env[v]);
+
+// Optional: Validate command-related config (log warnings if missing)
+const commandEnvVars = ['DISCORD_PLAYER_ROLE_ID', 'DISCORD_ROLL_DICE_ROLE_ID', 'DISCORD_STAFF_ROLE_ID'];
+const missingCommandVars = commandEnvVars.filter(v => !process.env[v]);
+if (missingCommandVars.length > 0) {
+  console.warn(`Warning: Missing optional environment variables for slash commands: ${missingCommandVars.join(', ')}`);
+  console.warn('Some slash commands may not work properly without these configured.');
+}
 
 if (missing.length > 0) {
   console.error(`Missing required environment variables: ${missing.join(', ')}`);
