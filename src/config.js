@@ -15,6 +15,7 @@ export const config = {
     questBoardChannelId: process.env.DISCORD_QUEST_BOARD_CHANNEL_ID,
     dailyJobChannelId: process.env.DISCORD_DAILY_JOB_CHANNEL_ID,
     playerIntrosChannelId: process.env.DISCORD_PLAYER_INTROS_CHANNEL_ID,
+    welcomeChannelId: process.env.DISCORD_WELCOME_CHANNEL_ID,
   },
   backend: {
     apiUrl: process.env.BACKEND_API_URL || 'http://localhost:3000',
@@ -22,6 +23,12 @@ export const config = {
   },
   checkout: {
     url: process.env.CHECKOUT_URL || 'https://triboar.guild/checkout/',
+  },
+  website: {
+    url: process.env.WEBSITE_URL || 'https://triboar.guild',
+  },
+  welcome: {
+    imageUrl: process.env.WELCOME_IMAGE_URL,
   },
   gracePeriod: {
     days: parseInt(process.env.GRACE_PERIOD_DAYS) || 7,
